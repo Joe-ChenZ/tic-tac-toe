@@ -1,8 +1,8 @@
-from player import HumanPlayer, RandomComputerPlayer
+from player import HumanPlayer, RandomComputerPlayer, SmartComputerPlayer
 class TicTacToe:
     def __init__(self):
         self.board = [' ']*9
-        self.winner = ''
+        self.winner = None
 
     def print_board(self):
         for i in range(3):
@@ -12,8 +12,11 @@ class TicTacToe:
     def get_available_moves(self):
         return [i for i, spot in enumerate(self.board) if spot == ' ']
     
-    def empty_squares(self):
+    def has_empty_squares(self):
         return ' ' in self.board
+
+    def get_num_empty_squares(self):
+        return len(self.get_available_moves())
     
     def make_move(self, letter, idx):
         if self.board[idx] == ' ':
@@ -52,7 +55,7 @@ class TicTacToe:
 def play(game, x_player, o_player):
         letter = 'X'
         
-        while game.empty_squares():
+        while game.has_empty_squares():
             if letter == 'X':
                 idx = x_player.get_move(game)
             else:
@@ -60,17 +63,16 @@ def play(game, x_player, o_player):
             
             if game.make_move(letter, idx):
                 game.print_board()
-            if (game.winner != ''):
+            if game.winner:
                 print(f"The winner is: player {letter}!")
                 return
             # print(idx, letter)
             letter = 'O' if letter == 'X' else 'X'
-
+            # print(game.get_num_empty_squares())
         print('It\'s a tie')
 
         
 game = TicTacToe()
-
 x_player = HumanPlayer('X')
-o_player = RandomComputerPlayer('O')
+o_player = SmartComputerPlayer('O')
 play(game, x_player, o_player)
